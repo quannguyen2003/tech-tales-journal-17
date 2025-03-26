@@ -6,7 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import Index from "./pages/Index";
+import Articles from "./pages/Articles";
 import Article from "./pages/Article";
+import Category from "./pages/Category";
+import About from "./pages/About";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
@@ -33,7 +36,10 @@ const App = () => (
             <main className="flex-grow pt-16">
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/articles" element={<Articles />} />
                 <Route path="/article/:slug" element={<Article />} />
+                <Route path="/category/:category" element={<Category />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard" element={<Dashboard />} />
