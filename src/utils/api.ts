@@ -1,6 +1,6 @@
-
 // Mock data for initial development
 import { formatDistanceToNow } from 'date-fns';
+import { toast } from 'sonner';
 
 export type Article = {
   id: string;
@@ -266,8 +266,28 @@ const MOCK_COMMENTS: Comment[] = [
   }
 ];
 
-// API functions
-export const getArticles = async (params: { featured?: boolean; limit?: number } = {}): Promise<Article[]> => {
+// Utility function to generate a slug from a title
+const generateSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s]/gi, '')
+    .replace(/\s+/g, '-');
+};
+
+// Utility function to generate a unique ID
+const generateId = (): string => {
+  return Math.random().toString(36).substring(2, 15);
+};
+
+// Utility function to calculate read time based on content length
+const calculateReadTime = (content: string): number => {
+  const wordsPerMinute = 200;
+  const wordCount = content.split(/\s+/).length;
+  return Math.ceil(wordCount / wordsPerMinute);
+};
+
+// API functions for articles
+export const getArticles = async (params: { featured?: boolean; limit?: number; category?: string; tag?: string } = {}): Promise<Article[]> => {
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 800));
   
@@ -276,6 +296,20 @@ export const getArticles = async (params: { featured?: boolean; limit?: number }
   // Filter featured articles if requested
   if (params.featured !== undefined) {
     articles = articles.filter(article => article.featured === params.featured);
+  }
+
+  // Filter by category if provided
+  if (params.category) {
+    articles = articles.filter(article => 
+      article.category.toLowerCase() === params.category?.toLowerCase()
+    );
+  }
+
+  // Filter by tag if provided
+  if (params.tag) {
+    articles = articles.filter(article => 
+      article.tags.some(tag => tag.toLowerCase() === params.tag?.toLowerCase())
+    );
   }
   
   // Sort by date (newest first)
@@ -297,11 +331,154 @@ export const getArticleBySlug = async (slug: string): Promise<Article | null> =>
   return article || null;
 };
 
+export const createArticle = async (articleData: Omit<Article, 'id' | 'slug' | 'createdAt' | 'updatedAt' | 'readTime' | 'views'>): Promise<Article> => {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  const now = new Date().toISOString();
+  const newArticle: Article = {
+    id: generateId(),
+    slug: generateSlug(articleData.title),
+    createdAt: now,
+    updatedAt: now,
+    readTime: calculateReadTime(articleData.content),
+    views: 0,
+    ...articleData
+  };
+  
+  // Add to mock database
+  MOCK_ARTICLES.push(newArticle);
+  
+  toast.success('Article created successfully');
+  return newArticle;
+};
+
+export const updateArticle = async (id: string, articleData: Partial<Omit<Article, 'id' | 'createdAt'>>): Promise<Article | null> => {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  const articleIndex = MOCK_ARTICLES.findIndex(article => article.id === id);
+  
+  if (articleIndex === -1) {
+    toast.error('Article not found');
+    return null;
+  }
+  
+  // Generate new slug if title was updated
+  let updatedSlug = MOCK_ARTICLES[articleIndex].slug;
+  if (articleData.title) {
+    updatedSlug = generateSlug(articleData.title);
+  }
+  
+  // Calculate new readTime if content was updated
+  let updatedReadTime = MOCK_ARTICLES[articleIndex].readTime;
+  if (articleData.content) {
+    updatedReadTime = calculateReadTime(articleData.content);
+  }
+  
+  // Update the article
+  const updatedArticle: Article = {
+    ...MOCK_ARTICLES[articleIndex],
+    ...articleData,
+    slug: updatedSlug,
+    readTime: updatedReadTime,
+    updatedAt: new Date().toISOString()
+  };
+  
+  MOCK_ARTICLES[articleIndex] = updatedArticle;
+  
+  toast.success('Article updated successfully');
+  return updatedArticle;
+};
+
+export const deleteArticle = async (id: string): Promise<boolean> => {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  const articleIndex = MOCK_ARTICLES.findIndex(article => article.id === id);
+  
+  if (articleIndex === -1) {
+    toast.error('Article not found');
+    return false;
+  }
+  
+  // Remove article from mock database
+  MOCK_ARTICLES.splice(articleIndex, 1);
+  
+  // Also remove any comments associated with this article
+  const commentIndicesToRemove = MOCK_COMMENTS
+    .map((comment, index) => comment.articleId === id ? index : -1)
+    .filter(index => index !== -1)
+    .sort((a, b) => b - a); // Sort in descending order to remove from the end first
+  
+  commentIndicesToRemove.forEach(index => MOCK_COMMENTS.splice(index, 1));
+  
+  toast.success('Article deleted successfully');
+  return true;
+};
+
+// API functions for comments
 export const getCommentsByArticleId = async (articleId: string): Promise<Comment[]> => {
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 800));
   
   return MOCK_COMMENTS.filter(comment => comment.articleId === articleId);
+};
+
+export const createComment = async (commentData: Omit<Comment, 'id' | 'createdAt'>): Promise<Comment> => {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  const newComment: Comment = {
+    id: generateId(),
+    createdAt: new Date().toISOString(),
+    ...commentData
+  };
+  
+  // Add to mock database
+  MOCK_COMMENTS.push(newComment);
+  
+  toast.success('Comment added successfully');
+  return newComment;
+};
+
+export const updateComment = async (id: string, content: string): Promise<Comment | null> => {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  const commentIndex = MOCK_COMMENTS.findIndex(comment => comment.id === id);
+  
+  if (commentIndex === -1) {
+    toast.error('Comment not found');
+    return null;
+  }
+  
+  // Update the comment
+  MOCK_COMMENTS[commentIndex] = {
+    ...MOCK_COMMENTS[commentIndex],
+    content
+  };
+  
+  toast.success('Comment updated successfully');
+  return MOCK_COMMENTS[commentIndex];
+};
+
+export const deleteComment = async (id: string): Promise<boolean> => {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  const commentIndex = MOCK_COMMENTS.findIndex(comment => comment.id === id);
+  
+  if (commentIndex === -1) {
+    toast.error('Comment not found');
+    return false;
+  }
+  
+  // Remove comment from mock database
+  MOCK_COMMENTS.splice(commentIndex, 1);
+  
+  toast.success('Comment deleted successfully');
+  return true;
 };
 
 export const formatDate = (dateString: string): string => {

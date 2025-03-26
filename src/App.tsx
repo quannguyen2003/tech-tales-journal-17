@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import ArticleEditor from "./pages/ArticleEditor";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
@@ -36,6 +37,8 @@ const App = () => (
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/create-article" element={<ArticleEditor />} />
+                <Route path="/edit-article/:slug" element={<ArticleEditor />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
