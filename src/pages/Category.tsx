@@ -21,17 +21,27 @@ const Category = () => {
   return (
     <div className="min-h-[calc(100vh-200px)] py-12 pb-20">
       <div className="content-container">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="mb-6"
-          asChild
-        >
-          <Link to="/articles">
-            <ArrowLeft size={16} className="mr-2" />
-            Back to all articles
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-2 mb-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            asChild
+          >
+            <Link to="/categories">
+              <ArrowLeft size={16} className="mr-2" />
+              All Categories
+            </Link>
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            asChild
+          >
+            <Link to="/articles">
+              Articles
+            </Link>
+          </Button>
+        </div>
 
         <div className="mb-12">
           <h1 className="text-4xl font-bold mb-4">{decodedCategory}</h1>
