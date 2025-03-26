@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -13,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import MarkdownUploader from '@/components/articles/MarkdownUploader';
 
 const formSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -139,6 +139,24 @@ const ArticleEditor = () => {
     }
   };
 
+  const handleMarkdownLoaded = (data: { title?: string; content: string }) => {
+    // Update the form with the loaded markdown content
+    form.setValue('content', data.content);
+    
+    // If title was extracted from the markdown, set it as well
+    if (data.title) {
+      form.setValue('title', data.title);
+    }
+    
+    // Set focus on the excerpt field to encourage the user to fill in the remaining details
+    setTimeout(() => {
+      const excerptField = document.querySelector('textarea[name="excerpt"]');
+      if (excerptField instanceof HTMLTextAreaElement) {
+        excerptField.focus();
+      }
+    }, 100);
+  };
+
   return (
     <div className="container py-8 max-w-4xl mx-auto">
       <Card>
@@ -151,6 +169,13 @@ const ArticleEditor = () => {
           </p>
         </CardHeader>
         <CardContent>
+          {!isEditing && (
+            <div className="mb-8">
+              <h2 className="text-lg font-medium mb-2">Quick Start</h2>
+              <MarkdownUploader onContentLoaded={handleMarkdownLoaded} />
+            </div>
+          )}
+          
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
