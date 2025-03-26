@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Mail, GitHub, Twitter, Linkedin } from 'lucide-react';
+import { Mail, Github, Twitter, Linkedin } from 'lucide-react';
 
 const About = () => {
   const teamMembers = [
@@ -134,7 +133,7 @@ const About = () => {
                     <Linkedin size={18} />
                   </a>
                   <a href={member.social.github} aria-label={`${member.name}'s GitHub`} className="text-muted-foreground hover:text-primary transition-colors">
-                    <GitHub size={18} />
+                    <Github size={18} />
                   </a>
                   <a href={`mailto:${member.social.email}`} aria-label={`Email ${member.name}`} className="text-muted-foreground hover:text-primary transition-colors">
                     <Mail size={18} />
