@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import FeaturedArticle from '@/components/articles/FeaturedArticle';
 import ArticleCard from '@/components/articles/ArticleCard';
+import BlurImage from '@/components/ui/BlurImage';
 import { getArticles } from '@/utils/api';
 import { Separator } from '@/components/ui/separator';
 
