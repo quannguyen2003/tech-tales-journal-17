@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,6 +31,20 @@ const Login = () => {
       navigate('/');
     } catch (error) {
       // Error is handled by the AuthContext
+    }
+  };
+
+  const setDemoCredentials = (role: 'admin' | 'author') => {
+    if (role === 'admin') {
+      setFormData({
+        email: 'admin@example.com',
+        password: 'admin123',
+      });
+    } else {
+      setFormData({
+        email: 'jane@example.com',
+        password: 'password',
+      });
     }
   };
   
@@ -98,6 +112,46 @@ const Login = () => {
             <ArrowRight size={16} className="ml-2" />
           </Button>
         </form>
+        
+        {/* Test Account Info */}
+        <div className="mt-6 p-4 bg-muted rounded-lg">
+          <div className="flex items-start gap-2">
+            <Info size={16} className="text-primary mt-0.5" />
+            <div>
+              <h3 className="text-sm font-medium mb-1">Test Accounts</h3>
+              <div className="space-y-3 text-xs text-muted-foreground">
+                <div>
+                  <div className="mb-1">
+                    <strong>Admin Account:</strong> admin@example.com / admin123
+                  </div>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-7 text-xs"
+                    onClick={() => setDemoCredentials('admin')}
+                  >
+                    Use Admin Credentials
+                  </Button>
+                </div>
+                <div>
+                  <div className="mb-1">
+                    <strong>Author Account:</strong> jane@example.com / password
+                  </div>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-7 text-xs"
+                    onClick={() => setDemoCredentials('author')}
+                  >
+                    Use Author Credentials
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         
         <div className="relative my-8">
           <Separator />

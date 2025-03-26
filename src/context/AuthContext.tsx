@@ -38,6 +38,14 @@ const MOCK_USERS = [
     password: 'password',
     role: 'author' as const,
     avatar: 'https://i.pravatar.cc/150?u=jane'
+  },
+  {
+    id: '3',
+    name: 'Admin User',
+    email: 'admin@example.com',
+    password: 'admin123',
+    role: 'admin' as const,
+    avatar: 'https://i.pravatar.cc/150?u=admin'
   }
 ];
 
